@@ -8,7 +8,7 @@
     <title>Simple Liker</title>
   </head>
   <body>
-    <div id="modal">
+    <div id="modal" class="hidden">
       <h2>Error!</h2>
       <p id="modal-message"></p>
     </div>
@@ -74,3 +74,40 @@
   </body>
   <script src="main.js" charset="utf-8"></script>
 </html>
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Step 1: Add the `.hidden` class to the error modal in the HTML
+  const errorModal = document.getElementById('modal');
+  errorModal.classList.add('hidden');
+
+  // Step 2: Add an event listener to the like button
+  const likeButton = document.querySelector('.like');
+  likeButton.addEventListener('click', () => {
+    // Step 2a: Invoke `mimicServerCall` to simulate making a server request
+    mimicServerCall()
+      .then(() => {
+        // Step 2c: When the "server" returns a success status
+        // Change the heart to a full heart
+        likeButton.classList.add('activated-heart');
+      })
+      .catch(() => {
+        // Step 2b: When the "server" returns a failure status
+        // Display the error modal
+        errorModal.classList.remove('hidden');
+        // Display the server error message in the modal
+        const modalMessage = document.getElementById('modal-message');
+        modalMessage.textContent = 'Server error message goes here';
+
+        // Use `setTimeout` to hide the modal after 3 seconds
+        setTimeout(() => {
+          errorModal.classList.add('hidden');
+        }, 3000);
+      });
+  });
+
+  // Step 3: Add an event listener to the activated heart
+  likeButton.addEventListener('click', () => {
+    // Change the heart back to an empty heart
+    likeButton.classList.remove('activated-heart');
+  });
+});
